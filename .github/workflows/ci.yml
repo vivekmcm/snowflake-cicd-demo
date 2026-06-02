@@ -3,7 +3,7 @@ name: CI - Test SQL on Snowflake
 on:
   pull_request:
     branches: [main]
-
+ 
 jobs:
   test-sql:
     runs-on: ubuntu-latest
@@ -22,7 +22,12 @@ jobs:
           SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
           SNOWFLAKE_WAREHOUSE: COMPUTE_WH
           SNOWFLAKE_ROLE: SYSADMIN
-        run: snow connection test -x
+        run: |
+          snow connection test \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator SNOWFLAKE_JWT \
+            -x
 
       - name: Run SQL script (test)
         env:
@@ -32,4 +37,9 @@ jobs:
           SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
           SNOWFLAKE_WAREHOUSE: COMPUTE_WH
           SNOWFLAKE_ROLE: SYSADMIN
-        run: snow sql -f scripts/deploy.sql -x
+        run: |
+          snow sql -f scripts/deploy.sql \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator SNOWFLAKE_JWT \
+            -x
