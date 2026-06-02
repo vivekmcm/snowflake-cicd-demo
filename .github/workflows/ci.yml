@@ -3,7 +3,7 @@ name: CI - Test SQL on Snowflake
 on:
   pull_request:
     branches: [main]
-
+workflow_dispatch:
 jobs:
   test-sql:
     runs-on: ubuntu-latest
