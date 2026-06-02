@@ -1,0 +1,33 @@
+name: CI - Test SQL on Snowflake
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Snowflake CLI
+        uses: snowflakedb/snowflake-cli-action@v2.0
+
+      - name: Verify Snowflake connection
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+          SNOWFLAKE_ROLE: SYSADMIN
+        run: snow connection test -x
+
+      - name: Run SQL script (test)
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+          SNOWFLAKE_ROLE: SYSADMIN
+        run: snow sql -f scripts/deploy.sql -x
