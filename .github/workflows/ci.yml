@@ -3,7 +3,9 @@ name: CI - Test SQL on Snowflake
 on:
   pull_request:
     branches: [main]
+
   workflow_dispatch:
+
 jobs:
   test-sql:
     runs-on: ubuntu-latest
@@ -19,6 +21,7 @@ jobs:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
           SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
           SNOWFLAKE_WAREHOUSE: COMPUTE_WH
           SNOWFLAKE_ROLE: SYSADMIN
         run: snow connection test -x
@@ -28,6 +31,7 @@ jobs:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
           SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
           SNOWFLAKE_WAREHOUSE: COMPUTE_WH
           SNOWFLAKE_ROLE: SYSADMIN
         run: snow sql -f scripts/deploy.sql -x
